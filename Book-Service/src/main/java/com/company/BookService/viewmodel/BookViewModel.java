@@ -1,10 +1,10 @@
 package com.company.BookService.viewmodel;
 
+import com.company.BookService.dto.Note;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,19 +18,19 @@ public class BookViewModel implements Cloneable {
     @NotEmpty
     @Size(max = 50)
     private String author;
-    private List<?> notes;
+    private List<Note> notes;
 
     public BookViewModel() {
     }
 
-    public BookViewModel(@NotNull Integer id, @NotEmpty @Size(max = 50) String title, @NotEmpty @Size(max = 50) String author, List<?> notes) {
+    public BookViewModel(@NotNull Integer id, @NotEmpty @Size(max = 50) String title, @NotEmpty @Size(max = 50) String author, List<Note> notes) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.notes = notes;
     }
 
-    public BookViewModel(@NotEmpty @Size(max = 50) String title, @NotEmpty @Size(max = 50) String author, List<?> notes) {
+    public BookViewModel(@NotEmpty @Size(max = 50) String title, @NotEmpty @Size(max = 50) String author, List<Note> notes) {
         this.title = title;
         this.author = author;
         this.notes = notes;
@@ -60,11 +60,11 @@ public class BookViewModel implements Cloneable {
         this.author = author;
     }
 
-    public List<?> getNotes() {
+    public List<Note> getNotes() {
         return notes;
     }
 
-    public void setNotes(List<?> notes) {
+    public void setNotes(List<Note> notes) {
         this.notes = notes;
     }
 

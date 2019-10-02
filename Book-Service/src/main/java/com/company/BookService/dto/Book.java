@@ -14,18 +14,18 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.AUTO)
 
     @Column(name="book_id", nullable = false, unique = true)
-    private int id;
+    private int bookId;
     @Column(name="title", nullable=false, length=50)
     private String title;
     @Column(name="author", nullable=false, length=50)
     private String author;
 
     public int getId() {
-        return id;
+        return bookId;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.bookId = id;
     }
 
     public String getTitle() {
@@ -49,14 +49,14 @@ public class Book {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
-        return id == book.id &&
+        return bookId == book.bookId &&
                 Objects.equals(title, book.title) &&
                 Objects.equals(author, book.author);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, author);
+        return Objects.hash(bookId, title, author);
     }
 
 

@@ -2,19 +2,19 @@ package com.company.BookService.viewmodel;
 
 import java.util.Objects;
 
-public class Note implements Cloneable {
+public class NoteViewModel implements Cloneable {
     private Integer id;
     private String note;
 
-    public Note() {
+    public NoteViewModel() {
     }
 
-    public Note(Integer id, String note) {
+    public NoteViewModel(Integer id, String note) {
         this.id = id;
         this.note = note;
     }
 
-    public Note(String note) {
+    public NoteViewModel(String note) {
         this.note = note;
     }
 
@@ -38,7 +38,7 @@ public class Note implements Cloneable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Note that = (Note) o;
+        NoteViewModel that = (NoteViewModel) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(note, that.note);
     }
@@ -57,9 +57,9 @@ public class Note implements Cloneable {
     }
 
     @Override
-    public Note clone() {
+    public NoteViewModel clone() {
         try {
-            return (Note) super.clone();
+            return (NoteViewModel) super.clone();
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
             return null;
