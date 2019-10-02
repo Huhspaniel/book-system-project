@@ -3,27 +3,24 @@ package com.trilogyed.notequeueconsumer.util.messages;
 import java.util.Objects;
 
 public class Note {
-    private Integer id;
+    private Integer noteId;
+    private Integer bookId;
     private String note;
 
-    public Note() {
+    public Integer getNoteId() {
+        return noteId;
     }
 
-    public Note(Integer id, String note) {
-        this.id = id;
-        this.note = note;
+    public void setNoteId(Integer noteId) {
+        this.noteId = noteId;
     }
 
-    public Note(String note) {
-        this.note = note;
+    public Integer getBookId() {
+        return bookId;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
+    public void setBookId(Integer bookId) {
+        this.bookId = bookId;
     }
 
     public String getNote() {
@@ -39,19 +36,21 @@ public class Note {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Note note1 = (Note) o;
-        return Objects.equals(id, note1.id) &&
+        return Objects.equals(noteId, note1.noteId) &&
+                Objects.equals(bookId, note1.bookId) &&
                 Objects.equals(note, note1.note);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, note);
+        return Objects.hash(noteId, bookId, note);
     }
 
     @Override
     public String toString() {
         return "Note{" +
-                "id=" + id +
+                "noteId=" + noteId +
+                ", bookId=" + bookId +
                 ", note='" + note + '\'' +
                 '}';
     }

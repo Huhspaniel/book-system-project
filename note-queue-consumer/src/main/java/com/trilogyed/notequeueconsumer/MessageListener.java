@@ -18,6 +18,12 @@ public class MessageListener {
 
     @RabbitListener(queues = NoteQueueConsumerApplication.QUEUE_NAME)
     public void receiveMessage(Note note) {
-        System.out.println(note);
+        if (note.getNoteId() == null) {
+            noteClient.createNote(note);
+        } else if (note.getNote() == null) {
+            noteClient.deleteNote(note.getNoteId());
+        } else {
+            noteClient.updateNote(note.getNoteId(), note);
+        }
     }
 }

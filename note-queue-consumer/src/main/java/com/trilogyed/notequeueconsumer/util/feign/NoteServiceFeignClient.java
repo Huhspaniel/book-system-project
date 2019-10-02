@@ -2,10 +2,7 @@ package com.trilogyed.notequeueconsumer.util.feign;
 
 import com.trilogyed.notequeueconsumer.util.messages.Note;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 @FeignClient
 public interface NoteServiceFeignClient {
@@ -14,4 +11,7 @@ public interface NoteServiceFeignClient {
 
     @PutMapping("/notes/{id}")
     void updateNote(@PathVariable Integer id, @RequestBody Note note);
+
+    @DeleteMapping("/notes/{id}")
+    void deleteNote(@PathVariable Integer id);
 }
