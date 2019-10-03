@@ -42,6 +42,7 @@ public class BookServiceLayer {
         bvm.setId(bookId);
         bvm.getNotes().stream()
                 .map(nvm -> new Note(nvm.getId(), bookId, nvm.getNote()))
+                //sends to broker
                 .forEach(rabbit::convertAndSend);
 
         return bvm;
