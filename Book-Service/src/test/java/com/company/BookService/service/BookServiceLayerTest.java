@@ -4,6 +4,7 @@ import com.company.BookService.dao.BookRepository;
 import com.company.BookService.dto.Book;
 import com.company.BookService.util.feign.NoteFeignClient;
 import com.company.BookService.viewmodel.BookViewModel;
+import com.company.BookService.viewmodel.NoteViewModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -43,6 +44,10 @@ public class BookServiceLayerTest {
         book.setTitle("Book Title");
         book.setAuthor("Author Name");
         book = bookServiceLayer.create(book);
+
+        NoteViewModel note = new NoteViewModel();
+        note.setId(1);
+        note.setNote("jkfdls");
 
         BookViewModel fromService = bookServiceLayer.findById(book.getId());
 

@@ -58,4 +58,12 @@ public class Note {
         return Objects.hash(noteId, bookId, note);
     }
 
+    @Override
+    public String toString() {
+        return "Note{" +
+                "noteId=" + noteId +
+                ", bookId=" + bookId +
+                ", note='" + note + '\'' +
+                '}';
+    }
 }

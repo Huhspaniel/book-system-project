@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@FeignClient
+@FeignClient(name = "note-service")
 public interface NoteFeignClient {
     @GetMapping("/notes/book/{id}")
     List<Note> getNotesByBookId(@PathVariable Integer id);

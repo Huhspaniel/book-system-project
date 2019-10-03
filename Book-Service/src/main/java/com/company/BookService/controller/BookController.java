@@ -13,39 +13,43 @@ import java.util.List;
 @RequestMapping("/books")
 public class BookController {
 
-    private BookServiceLayer service;
-
     @Autowired
-    public BookController(BookServiceLayer service) {
-        this.service = service;
-    }
+    BookServiceLayer bookService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public BookViewModel create(BookViewModel book) {
-        return null;
+
+        return bookService.create(book);
     }
 
     @GetMapping("/{id}")
     public BookViewModel getById(@PathVariable Integer id) {
-        return null;
+
+        return bookService.findById(id);
+
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<BookViewModel> getAll() {
-        return Collections.emptyList();
+
+        return bookService.findAll();
+
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void update(@RequestBody BookViewModel bookViewModel) {
+
+
+        bookService.update(bookViewModel);
 
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable Integer id) {
-
+        bookService.deleteById(id);
     }
 }
