@@ -5,6 +5,7 @@ import com.company.BookService.dto.Book;
 import com.company.BookService.dto.Note;
 import com.company.BookService.util.feign.NoteFeignClient;
 import com.company.BookService.viewmodel.BookViewModel;
+import com.company.BookService.viewmodel.NoteViewModel;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,16 +22,39 @@ public class BookServiceLayer {
     private BookRepository bookRepo;
     private NoteFeignClient noteClient;
 
+
     @Autowired
     public BookServiceLayer(RabbitTemplate rabbit, BookRepository bookRepo, NoteFeignClient noteClient) {
         this.rabbit = rabbit;
         this.bookRepo = bookRepo;
         this.noteClient = noteClient;
     }
+
+    private List<NoteViewModel> findByBookId(int bookId){
+        List<Note> notes = noteClient.getNotesByBookId(bookId);
+        List<NoteViewModel> noteViewModels = new ArrayList<>();
+
+        for(Note note : notes){
+            NoteViewModel nvm = buildNoteViewModel(note);
+            noteViewModels.add(nvm);
+        }
+
+        return noteViewModels;
+    }
+
+    private NoteViewModel buildNoteViewModel(Note note){
+        Book book = bookRepo.getOne(note.getBookId());
+
+        NoteViewModel nvm = new NoteViewModel();
+        nvm.setId(note.getNoteId());
+        nvm.setNote(note.getNote());
+
+        return nvm;
+    }
+
     @Transactional
     public BookViewModel create(BookViewModel bvm) {
         Book book = new Book();
-        book.setId(bvm.getId());
         book.setTitle(bvm.getTitle());
         book.setAuthor(bvm.getAuthor());
         book = bookRepo.save(book);
@@ -77,13 +101,13 @@ public class BookServiceLayer {
     }
 
     private BookViewModel buildBookViewModel(Book book){
-        List<Note> nvmList = noteClient.getNotesByBookId(book.getId());
+        List<NoteViewModel> noteViewModels = findByBookId(book.getId());
 
         BookViewModel bookViewModel = new BookViewModel();
         bookViewModel.setId(book.getId());
         bookViewModel.setTitle(book.getTitle());
         bookViewModel.setAuthor(book.getAuthor());
-        bookViewModel.setNotes(noteClient.getNotesByBookId(book.getId()));
+        bookViewModel.setNotes(noteViewModels);
 
         return bookViewModel;
 

@@ -18,19 +18,19 @@ public class BookViewModel implements Cloneable {
     @NotEmpty
     @Size(max = 50)
     private String author;
-    private List<Note> notes;
+    private List<NoteViewModel> notes;
 
     public BookViewModel() {
     }
 
-    public BookViewModel(@NotNull Integer id, @NotEmpty @Size(max = 50) String title, @NotEmpty @Size(max = 50) String author, List<Note> notes) {
+    public BookViewModel(@NotNull Integer id, @NotEmpty @Size(max = 50) String title, @NotEmpty @Size(max = 50) String author, List<NoteViewModel> notes) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.notes = notes;
     }
 
-    public BookViewModel(@NotEmpty @Size(max = 50) String title, @NotEmpty @Size(max = 50) String author, List<Note> notes) {
+    public BookViewModel(@NotEmpty @Size(max = 50) String title, @NotEmpty @Size(max = 50) String author, List<NoteViewModel> notes) {
         this.title = title;
         this.author = author;
         this.notes = notes;
@@ -60,11 +60,11 @@ public class BookViewModel implements Cloneable {
         this.author = author;
     }
 
-    public List<Note> getNotes() {
+    public List<NoteViewModel> getNotes() {
         return notes;
     }
 
-    public void setNotes(List<Note> notes) {
+    public void setNotes(List<NoteViewModel> notes) {
         this.notes = notes;
     }
 
