@@ -4,23 +4,32 @@ import java.util.Objects;
 
 public class Note {
 
-    private int noteId;
-    private int bookId;
+    private Integer noteId;
+    private Integer bookId;
     private String note;
 
-    public int getNoteId() {
+    public Note() {
+    }
+
+    public Note(Integer noteId, Integer bookId, String note) {
+        this.noteId = noteId;
+        this.bookId = bookId;
+        this.note = note;
+    }
+
+    public Integer getNoteId() {
         return noteId;
     }
 
-    public void setNoteId(int noteId) {
+    public void setNoteId(Integer noteId) {
         this.noteId = noteId;
     }
 
-    public int getBookId() {
+    public Integer getBookId() {
         return bookId;
     }
 
-    public void setBookId(int bookId) {
+    public void setBookId(Integer bookId) {
         this.bookId = bookId;
     }
 
@@ -37,8 +46,8 @@ public class Note {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Note note1 = (Note) o;
-        return noteId == note1.noteId &&
-                bookId == note1.bookId &&
+        return Objects.equals(noteId, note1.noteId) &&
+                Objects.equals(bookId, note1.bookId) &&
                 Objects.equals(note, note1.note);
     }
 
