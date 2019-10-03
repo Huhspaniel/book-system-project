@@ -18,7 +18,7 @@ public class BookController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public BookViewModel create(BookViewModel book) {
+    public BookViewModel create(@RequestBody BookViewModel book) {
 
         return bookService.create(book);
     }
