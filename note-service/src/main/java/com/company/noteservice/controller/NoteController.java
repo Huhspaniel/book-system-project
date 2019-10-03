@@ -48,9 +48,8 @@ public class NoteController {
     @RequestMapping(value ="/notes/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
     public void updateNote(@RequestBody @Valid Note note, @PathVariable("id") int id){
-        if(id == note.getNoteId()) {
-            repo.save(note);
-        }
+        note.setNoteId(id);
+        repo.save(note);
     }
 
     @RequestMapping(value ="/notes/{id}", method = RequestMethod.DELETE)

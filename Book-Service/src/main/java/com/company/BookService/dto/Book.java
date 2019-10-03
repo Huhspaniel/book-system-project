@@ -12,7 +12,6 @@ public class Book implements Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-
     @Column(name="book_id", nullable = false, unique = true)
     private Integer bookId;
     @Column(name="title", nullable=false, length=50)
