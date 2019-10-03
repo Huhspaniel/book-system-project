@@ -26,6 +26,8 @@ public class BookServiceLayer {
 
     @Autowired
     public BookServiceLayer(RabbitTemplate rabbit, BookRepository bookRepo, NoteFeignClient noteClient) {
+        rabbit.setRoutingKey(ROUTING_KEY);
+        rabbit.setExchange(EXCHANGE);
         this.rabbit = rabbit;
         this.bookRepo = bookRepo;
         this.noteClient = noteClient;
@@ -95,9 +97,10 @@ public class BookServiceLayer {
     }
 
     public void deleteById(Integer id) {
-
         bookRepo.deleteById(id);
-
+        noteClient.getNotesByBookId(id).stream()
+                .map(DeleteNoteMsg::of)
+                .forEach(rabbit::convertAndSend);
     }
 
     private BookViewModel buildBookViewModel(Book book) {
