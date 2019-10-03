@@ -80,20 +80,9 @@ public class BookServiceLayer {
             book.setAuthor(bvm.getAuthor());
             bookRepo.save(book);
 
-            List<Note> updateNotes = bvm.getNotes().stream()
+            bvm.getNotes().stream()
                     .map(nvm -> new Note(nvm.getId(), bookId, nvm.getNote()))
-                    .collect(Collectors.toList());
-            List<Integer> updateIds = updateNotes.stream()
-                    .map(Note::getNoteId)
-                    .collect(Collectors.toList());
-            List<Note> currentNotes = noteClient.getNotesByBookId(bookId);
-            // Delete notes
-            currentNotes.stream()
-                    .filter(n -> !updateIds.contains(n.getNoteId()))
-                    .map(DeleteNoteMsg::of)
                     .forEach(rabbit::convertAndSend);
-            // Update and create notes
-            updateNotes.forEach(rabbit::convertAndSend);
         }
     }
 
@@ -106,8 +95,6 @@ public class BookServiceLayer {
 
 
     private BookViewModel buildBookViewModel(Book book) {
-        List<Note> nvmList = noteClient.getNotesByBookId(book.getId());
-
         BookViewModel bookViewModel = new BookViewModel();
         bookViewModel.setId(book.getId());
         bookViewModel.setTitle(book.getTitle());
