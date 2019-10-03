@@ -16,6 +16,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,11 +52,9 @@ public class BookControllerTest {
         bvm.setAuthor("Author");
 
             NoteViewModel note = new NoteViewModel();
-            note.setId(2);
             note.setNote("notenotenote");
 
             NoteViewModel note2 = new NoteViewModel();
-            note2.setId(3);
             note2.setNote("notenotenote");
 
             List<NoteViewModel> notes = new ArrayList<>();
@@ -75,13 +75,13 @@ public class BookControllerTest {
 
         when(bookService.create(bvm)).thenReturn(bvm2);
 
-        this.mockMvc.perform(post("/books")
-                                .content(inputJson)
-                                .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(MockMvcRequestBuilders.post("/books")
+                .content(inputJson)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andDo(print())
-                .andExpect(status().isCreated());
-//                .andExpect(content().json(outputJson));
-
+                .andExpect(status().isCreated())
+                .andExpect(content().json(outputJson));
     }
 
     @Test
@@ -91,17 +91,17 @@ public class BookControllerTest {
         bvm.setTitle("New Title");
         bvm.setAuthor("Author");
 
-        NoteViewModel note = new NoteViewModel();
-        note.setId(2);
-        note.setNote("notenotenote");
+            NoteViewModel note = new NoteViewModel();
+            note.setId(2);
+            note.setNote("notenotenote");
 
-        NoteViewModel note2 = new NoteViewModel();
-        note2.setId(3);
-        note2.setNote("notenotenote");
+            NoteViewModel note2 = new NoteViewModel();
+            note2.setId(3);
+            note2.setNote("notenotenote");
 
-        List<NoteViewModel> notes = new ArrayList<>();
-        notes.add(note);
-        notes.add(note2);
+            List<NoteViewModel> notes = new ArrayList<>();
+            notes.add(note);
+            notes.add(note2);
 
         bvm.setNotes(notes);;
         bvm.setId(2);
@@ -123,17 +123,18 @@ public class BookControllerTest {
         BookViewModel bvm = new BookViewModel();
         bvm.setTitle("New Title");
         bvm.setAuthor("Author");
-        NoteViewModel note = new NoteViewModel();
-        note.setId(2);
-        note.setNote("notenotenote");
 
-        NoteViewModel note2 = new NoteViewModel();
-        note2.setId(3);
-        note2.setNote("notenotenote");
+            NoteViewModel note = new NoteViewModel();
+            note.setId(2);
+            note.setNote("notenotenote");
 
-        List<NoteViewModel> notes = new ArrayList<>();
-        notes.add(note);
-        notes.add(note2);
+            NoteViewModel note2 = new NoteViewModel();
+            note2.setId(3);
+            note2.setNote("notenotenote");
+
+            List<NoteViewModel> notes = new ArrayList<>();
+            notes.add(note);
+            notes.add(note2);
 
         bvm.setNotes(notes);;
         bvm.setId(1);
@@ -141,17 +142,18 @@ public class BookControllerTest {
         BookViewModel bvm2 = new BookViewModel();
         bvm2.setTitle("New Title2");
         bvm2.setAuthor("Author2");
-        NoteViewModel note3 = new NoteViewModel();
-        note3.setId(4);
-        note3.setNote("notenotenote2");
 
-        NoteViewModel note4 = new NoteViewModel();
-        note4.setId(5);
-        note4.setNote("notenotenote3");
+            NoteViewModel note3 = new NoteViewModel();
+            note3.setId(4);
+            note3.setNote("notenotenote2");
 
-        List<NoteViewModel> notes2 = new ArrayList<>();
-        notes2.add(note3);
-        notes2.add(note4);
+            NoteViewModel note4 = new NoteViewModel();
+            note4.setId(5);
+            note4.setNote("notenotenote3");
+
+            List<NoteViewModel> notes2 = new ArrayList<>();
+            notes2.add(note3);
+            notes2.add(note4);
 
         bvm2.setNotes(notes2);
         bvm2.setId(2);
@@ -194,16 +196,14 @@ public class BookControllerTest {
         notes.add(note2);
 
         bvm.setNotes(notes);;
-        bvm.setId(2);
 
         String inputJson = mapper.writeValueAsString(bvm);
 
-        this.mockMvc.perform(put("/books")
+        this.mockMvc.perform(put("/books/2")
                 .content(inputJson)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-
     }
 
     @Test
