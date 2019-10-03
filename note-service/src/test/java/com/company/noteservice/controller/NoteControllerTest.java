@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -38,18 +40,17 @@ public class NoteControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    NoteRepository repo;
+    private NoteRepository repo;
 
     private ObjectMapper mapper = new ObjectMapper();
 
     @Before
-    public void setUp(){
-
+    public void setUp() {
+        reset(repo);
     }
 
     @Test
     public void createNote() throws Exception {
-        repo.deleteAll();
         Note inputNote = new Note();
         inputNote.setBookId(1);
         inputNote.setNote("Note");
@@ -59,11 +60,13 @@ public class NoteControllerTest {
         Note outputNote = new Note();
         outputNote.setBookId(1);
         outputNote.setNote("Note");
+        outputNote.setNoteId(1);
 
         String outputJson = mapper.writeValueAsString(outputNote);
 
         when(repo.save(inputNote)).thenReturn(outputNote);
-        this.mockMvc.perform( MockMvcRequestBuilders.post("/notes/")
+
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/notes/")
                 .content(inputJSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -72,8 +75,7 @@ public class NoteControllerTest {
     }
 
     @Test
-    public void getNote() throws Exception{
-        repo.deleteAll();
+    public void getNote() throws Exception {
         Note inputNote = new Note();
         inputNote.setNoteId(1);
         inputNote.setBookId(1);
@@ -89,8 +91,7 @@ public class NoteControllerTest {
     }
 
     @Test
-    public void getNotesByBook() throws Exception{
-        repo.deleteAll();
+    public void getNotesByBook() throws Exception {
         Note inputNote = new Note();
         inputNote.setBookId(1);
         inputNote.setNote("Note");
@@ -116,15 +117,14 @@ public class NoteControllerTest {
         listChecker.add(note3);
         String outputJson = mapper.writeValueAsString(listChecker);
 
-        this.mockMvc.perform(get("/notes/book/"+inputNote.getBookId()))
+        this.mockMvc.perform(get("/notes/book/" + inputNote.getBookId()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().json(outputJson));
     }
 
     @Test
-    public void getAllNotes() throws Exception{
-        repo.deleteAll();
+    public void getAllNotes() throws Exception {
         Note inputNote = new Note();
         inputNote.setBookId(1);
         inputNote.setNote("Note");
@@ -159,8 +159,7 @@ public class NoteControllerTest {
     }
 
     @Test
-    public void updateNote() throws Exception{
-        repo.deleteAll();
+    public void updateNote() throws Exception {
         Note inputNote = new Note();
         inputNote.setBookId(1);
         inputNote.setNote("Note");
@@ -176,7 +175,7 @@ public class NoteControllerTest {
     }
 
     @Test
-    public void deleteNote() throws Exception{
+    public void deleteNote() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.delete("/notes/1"))
                 .andDo(print())
                 .andExpect(status().isOk())

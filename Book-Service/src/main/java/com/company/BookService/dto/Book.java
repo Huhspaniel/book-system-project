@@ -8,23 +8,37 @@ import java.util.Objects;
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name="book")
-public class Book {
+public class Book implements Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
 
     @Column(name="book_id", nullable = false, unique = true)
-    private int bookId;
+    private Integer bookId;
     @Column(name="title", nullable=false, length=50)
     private String title;
     @Column(name="author", nullable=false, length=50)
     private String author;
 
-    public int getId() {
+    public Book() {
+    }
+
+    public Book(String title, String author) {
+        this.title = title;
+        this.author = author;
+    }
+
+    public Book(Integer bookId, String title, String author) {
+        this.bookId = bookId;
+        this.title = title;
+        this.author = author;
+    }
+
+    public Integer getId() {
         return bookId;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.bookId = id;
     }
 
@@ -49,7 +63,7 @@ public class Book {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
-        return bookId == book.bookId &&
+        return Objects.equals(bookId, book.bookId) &&
                 Objects.equals(title, book.title) &&
                 Objects.equals(author, book.author);
     }
@@ -59,5 +73,13 @@ public class Book {
         return Objects.hash(bookId, title, author);
     }
 
-
+    @Override
+    public Book clone() {
+        try {
+            return (Book) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
