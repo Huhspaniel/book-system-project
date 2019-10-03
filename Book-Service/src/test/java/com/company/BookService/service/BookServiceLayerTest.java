@@ -8,6 +8,7 @@ import com.company.BookService.viewmodel.NoteViewModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
@@ -32,6 +33,8 @@ public class BookServiceLayerTest {
     public void setUp() throws Exception {
 
         setUpBookServiceMock();
+        rabbitTemplate = mock(RabbitTemplate.class);
+        feignClient = mock(NoteFeignClient.class);
 
         bookServiceLayer = new BookServiceLayer(rabbitTemplate, bookRepo, feignClient);
 
