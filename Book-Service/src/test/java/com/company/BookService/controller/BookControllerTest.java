@@ -52,11 +52,9 @@ public class BookControllerTest {
         bvm.setAuthor("Author");
 
             NoteViewModel note = new NoteViewModel();
-            note.setId(2);
             note.setNote("notenotenote");
 
             NoteViewModel note2 = new NoteViewModel();
-            note2.setId(3);
             note2.setNote("notenotenote");
 
             List<NoteViewModel> notes = new ArrayList<>();
@@ -198,16 +196,14 @@ public class BookControllerTest {
         notes.add(note2);
 
         bvm.setNotes(notes);;
-        bvm.setId(2);
 
         String inputJson = mapper.writeValueAsString(bvm);
 
-        this.mockMvc.perform(put("/books")
+        this.mockMvc.perform(put("/books/2")
                 .content(inputJson)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-
     }
 
     @Test

@@ -19,7 +19,11 @@ public class BookController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public BookViewModel create(@RequestBody BookViewModel book) {
-
+        if (book.getNotes() != null) {
+            book.getNotes().forEach(n -> n.setId(null));
+        } else {
+            book.setNotes(Collections.emptyList());
+        }
         return bookService.create(book);
     }
 
@@ -38,11 +42,10 @@ public class BookController {
 
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@RequestBody BookViewModel bookViewModel) {
-
-
+    public void update(@RequestBody BookViewModel bookViewModel, @PathVariable Integer id) {
+        bookViewModel.setId(id);
         bookService.update(bookViewModel);
 
     }
