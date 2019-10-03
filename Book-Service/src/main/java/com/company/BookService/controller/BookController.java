@@ -19,6 +19,11 @@ public class BookController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public BookViewModel create(@RequestBody BookViewModel book) {
+        if (book.getNotes() != null) {
+            book.getNotes().forEach(n -> n.setId(null));
+        } else {
+            book.setNotes(Collections.emptyList());
+        }
         return bookService.create(book);
     }
 
