@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -23,7 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -38,32 +40,28 @@ public class NoteControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    NoteRepository repo;
+    private NoteRepository repo;
 
     private ObjectMapper mapper = new ObjectMapper();
 
     @Before
-    public void setUp(){
-
+    public void setUp() {
+        reset(repo);
     }
 
     @Test
     public void createNote() throws Exception {
-        repo.deleteAll();
-        Note inputNote = new Note();
-        inputNote.setBookId(1);
-        inputNote.setNote("Note");
+        Note inputNote = new Note(1, "Note");
 
         String inputJSON = mapper.writeValueAsString(inputNote);
 
-        Note outputNote = new Note();
-        outputNote.setBookId(1);
-        outputNote.setNote("Note");
+        Note outputNote = new Note(1, 1, "Note");
 
         String outputJson = mapper.writeValueAsString(outputNote);
 
         when(repo.save(inputNote)).thenReturn(outputNote);
-        this.mockMvc.perform( MockMvcRequestBuilders.post("/notes/")
+
+        this.mockMvc.perform(MockMvcRequestBuilders.post("/notes/")
                 .content(inputJSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -72,12 +70,8 @@ public class NoteControllerTest {
     }
 
     @Test
-    public void getNote() throws Exception{
-        repo.deleteAll();
-        Note inputNote = new Note();
-        inputNote.setNoteId(1);
-        inputNote.setBookId(1);
-        inputNote.setNote("Note");
+    public void getNote() throws Exception {
+        Note inputNote = new Note(1, 1, "Note");
 
         String outputJson = mapper.writeValueAsString(inputNote);
 
@@ -89,68 +83,41 @@ public class NoteControllerTest {
     }
 
     @Test
-    public void getNotesByBook() throws Exception{
-        repo.deleteAll();
-        Note inputNote = new Note();
-        inputNote.setBookId(1);
-        inputNote.setNote("Note");
+    public void getNotesByBook() throws Exception {
+        Note note1 = new Note(1, "Note");
 
-        Note note2 = new Note();
-        note2.setBookId(2);
-        note2.setNote("Letter");
-        repo.save(note2);
-
-        Note note3 = new Note();
-        note3.setBookId(1);
-        note3.setNote("Post-it");
-        repo.save(note3);
+        Note note3 = new Note(1, "Post-it");
 
         List<Note> noteList = new ArrayList<>();
-        noteList.add(inputNote);
+        noteList.add(note1);
         noteList.add(note3);
 
         when(repo.getByBookId(1)).thenReturn(noteList);
 
-        List<Note> listChecker = new ArrayList<>();
-        listChecker.add(inputNote);
-        listChecker.add(note3);
-        String outputJson = mapper.writeValueAsString(listChecker);
+        String outputJson = mapper.writeValueAsString(noteList);
 
-        this.mockMvc.perform(get("/notes/book/"+inputNote.getBookId()))
+        this.mockMvc.perform(get("/notes/book/" + note1.getBookId()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().json(outputJson));
     }
 
     @Test
-    public void getAllNotes() throws Exception{
-        repo.deleteAll();
-        Note inputNote = new Note();
-        inputNote.setBookId(1);
-        inputNote.setNote("Note");
+    public void getAllNotes() throws Exception {
+        Note note1 = new Note(1, "Note");
 
-        Note note2 = new Note();
-        note2.setBookId(2);
-        note2.setNote("Letter");
-        repo.save(note2);
+        Note note2 = new Note(2, "Letter");
 
-        Note note3 = new Note();
-        note3.setBookId(1);
-        note3.setNote("Post-it");
-        repo.save(note3);
+        Note note3 = new Note(1, "Post-it");
 
         List<Note> noteList = new ArrayList<>();
-        noteList.add(inputNote);
+        noteList.add(note1);
         noteList.add(note2);
         noteList.add(note3);
 
         when(repo.findAll()).thenReturn(noteList);
 
-        List<Note> listChecker = new ArrayList<>();
-        listChecker.add(inputNote);
-        listChecker.add(note2);
-        listChecker.add(note3);
-        String outputJson = mapper.writeValueAsString(listChecker);
+        String outputJson = mapper.writeValueAsString(noteList);
 
         this.mockMvc.perform(get("/notes"))
                 .andDo(print())
@@ -159,11 +126,9 @@ public class NoteControllerTest {
     }
 
     @Test
-    public void updateNote() throws Exception{
-        repo.deleteAll();
-        Note inputNote = new Note();
-        inputNote.setBookId(1);
-        inputNote.setNote("Note");
+    public void updateNote() throws Exception {
+        Note inputNote = new Note(1, "Note");
+        Note expectedNote = new Note(1, 1, "Note");
 
         String inputJson = mapper.writeValueAsString(inputNote);
 
@@ -173,13 +138,17 @@ public class NoteControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
+
+        verify(repo).save(expectedNote);
     }
 
     @Test
-    public void deleteNote() throws Exception{
+    public void deleteNote() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders.delete("/notes/1"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
+
+        verify(repo).deleteById(1);
     }
 }

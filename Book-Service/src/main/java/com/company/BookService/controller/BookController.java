@@ -14,7 +14,7 @@ import java.util.List;
 public class BookController {
 
     @Autowired
-    BookServiceLayer bookService;
+    private BookServiceLayer bookService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
